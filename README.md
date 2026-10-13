@@ -5,7 +5,7 @@ diagnoses, 5 CORE questions, 6 tools). Enter the exam measurements and the page 
 diagnoses, primary and secondary treatments and sequencing considerations live, then builds a
 plain-text note to paste into the chart.
 
-**Use it:** https://rarcemunoz.github.io/global-diagnosis/ (address confirmed after first deploy)
+**Use it:** https://rarcemunoz.github.io/global-diagnosis/
 
 - Nothing is saved or sent. Everything runs in your browser, and refreshing clears it.
 - Do not enter patient names or chart numbers.
