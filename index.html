@@ -137,6 +137,25 @@ svg text{font-family:var(--font-mono);font-size:11px;fill:var(--muted)}
 .ref ol,.ref ul{margin:0;padding-left:20px;font-size:13.5px;display:flex;flex-direction:column;gap:4px}
 .cite{font-size:12px;color:var(--muted)}
 .cite a{color:var(--accent)}
+/* how it works */
+.guide{max-width:780px;display:flex;flex-direction:column;gap:28px}
+.guide h2{font-family:var(--font-display);font-stretch:110%;font-weight:800;font-size:21px;margin:0 0 8px;text-wrap:balance}
+.guide h3{font-size:15px;margin:0 0 4px}
+.guide p{margin:0 0 10px;max-width:68ch}
+.guide p:last-child{margin-bottom:0}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch;margin:12px 0 4px;padding:0;list-style:none}
+.flow li{flex:1 1 130px;background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:4px;padding:8px 10px;font-size:13px;min-width:0}
+.flow li b{display:block;font:600 11px var(--font-mono);color:var(--accent);letter-spacing:.04em;margin-bottom:2px}
+.steps{list-style:none;counter-reset:s;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.steps>li{counter-increment:s;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px}
+.steps>li::before{content:counter(s);font:600 13px/26px var(--font-mono);text-align:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--bg)}
+.steps p{margin:0;font-size:14px}
+.legend-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:10px}
+.legend-grid>div{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:10px 12px;font-size:13.5px}
+.legend-grid h3{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.walk{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:4px;padding:14px 16px}
+.walk ul{margin:6px 0 10px;padding-left:20px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.caveats{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:5px;font-size:13.5px;color:var(--muted)}
 .inline-confirm{display:inline-flex;gap:6px;align-items:center;font-size:12.5px}
 @media (prefers-reduced-motion:no-preference){.fill{transition:width .3s ease}}
 .note-card{margin-top:20px}
@@ -152,6 +171,7 @@ svg text{font-family:var(--font-mono);font-size:11px;fill:var(--muted)}
     </div>
     <nav class="tabs" role="tablist" aria-label="Sections">
       <button role="tab" id="tab-exam" aria-selected="true" data-tab="exam">Exam</button>
+      <button role="tab" id="tab-how" aria-selected="false" data-tab="how">How it works</button>
       <button role="tab" id="tab-ref" aria-selected="false" data-tab="ref">Reference</button>
     </nav>
   </header>
@@ -263,6 +283,71 @@ svg text{font-family:var(--font-mono);font-size:11px;fill:var(--muted)}
       <div class="toolbar" style="margin-bottom:6px"><h3>Paste-ready note</h3><button type="button" class="btn small primary" data-copy>Copy note</button></div>
       <p class="sub">Plain text that updates as you type. Paste it into the chart, an email or a case presentation.</p>
       <textarea id="note" readonly aria-label="Paste-ready note" spellcheck="false"></textarea>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="tab" id="sec-how" role="tabpanel" aria-labelledby="tab-how" hidden>
+    <div class="guide">
+      <div>
+        <h2>What Global Diagnosis is</h2>
+        <p>Global Diagnosis is a treatment-planning system from J. William Robbins and Jeffrey S. Rouse. It builds on facially generated treatment planning, which starts from where the incisal edges belong in the face. The authors found that edges can be in the right place and the result still fail, because the gingival levels or the smile frame are wrong.</p>
+        <p>So the system starts from one question: <b>why are the gingival levels where they are?</b> Once the cause is named, only a few treatments fit it. In the authors' words, the diagnosis leads to the treatment plan. Pulpal, periodontal and occlusal findings still matter, but as "regional" diagnoses that adjust the plan rather than set it.</p>
+        <ol class="flow" aria-label="The Global Diagnosis sequence">
+          <li><b>MEASURE</b>The Global Analysis Diagnosis (GAD) form, outside in, in about 5 minutes</li>
+          <li><b>ASK 5</b>The five CORE questions explain the discrepancy</li>
+          <li><b>NAME 4</b>Skeletal, lip, dentoalveolar extrusion, or short/long tooth</li>
+          <li><b>CHOOSE FROM 6</b>Graft, crown lengthening, intrusion, extrusion, surgery, plastics</li>
+          <li><b>SEQUENCE</b>Order the steps when there is more than one diagnosis</li>
+        </ol>
+      </div>
+
+      <div>
+        <h2>How to use the tool</h2>
+        <p>The Exam tab follows the GAD form from the face inward. Fill it in at the chair in this order. Any field can stay blank; the read-out on the right only uses what you enter.</p>
+        <ol class="steps">
+          <li><p><b>Set up.</b> Seat the patient upright in natural head position, ideally standing for the face and midline views. Have a digital caliper or millimeter ruler, a periodontal probe and an explorer.</p></li>
+          <li><p><b>Patient.</b> Enter sex and age. The lip and display norms depend on both, and lip norms shift 1 mm per decade after 40.</p></li>
+          <li><p><b>Q1 Face.</b> With lips and teeth slightly apart, measure the middle third (glabella to subnasale) and lower third (subnasale to menton). Add the Angle class, and from the profile, how far each lip sits behind the nose–chin E-line.</p></li>
+          <li><p><b>Q2 Lip.</b> In repose, measure lip length at the midline and how much central incisor shows. If the lip covers the edge, record a negative number. Then ask the patient to <i>laugh</i>; "smile" usually gets a clenched grimace. Record gingival display above the margins, and measure mobility directly if you can.</p></li>
+          <li><p><b>Q3 Gingival line.</b> Look at the line through the canine and central gingival margins against the horizon: parallel, concave or canted. To judge the incisal plane, stretch the upper lip level with your fingers and use it as the horizon.</p></li>
+          <li><p><b>Q4–5 Teeth.</b> Measure crown length on #5–#12. On teeth that measure short, also record the width and feel for the CEJ with an explorer. A CEJ you can't feel on a short tooth means altered passive eruption.</p></li>
+          <li><p><b>Smile frame and context.</b> Midline, wear, buccal corridors and the rest of the form enrich the note. Mark whether orthodontics or anterior restorations are planned; that unlocks the sequencing advice.</p></li>
+          <li><p><b>Copy the note.</b> Press <b>Copy note</b> and paste it into the chart or case presentation. Press <b>Clear form</b> before the next patient. Nothing is saved, so refreshing the page erases everything.</p></li>
+        </ol>
+      </div>
+
+      <div>
+        <h2>Reading the result</h2>
+        <div class="legend-grid">
+          <div><h3>Five CORE questions</h3><p>Each question shows <span class="chip ok">Normal</span> <span class="chip out">Outside norm</span> or <span class="chip na">Not recorded</span>. Diagnoses appear once three or more are answered.</p></div>
+          <div><h3>Global diagnoses</h3><p>One card per cause. The small label gives the family, the line under the title shows the measurement that triggered it, and the chips list the <b>primary</b> and <b>secondary</b> treatments from the book.</p></div>
+          <div><h3>Tool numbers</h3><p><b>1</b> graft · <b>2</b> crown lengthening · <b>3</b> intrusion · <b>4</b> extrusion · <b>5</b> surgery · <b>6</b> plastics. <b>R</b> restorative, <b>O</b> orthodontics, <b>E</b> education, exercises or appliance.</p></div>
+          <div><h3>Sequencing and other findings</h3><p>Sequencing appears when orthodontics or restorations are planned, or when there is more than one diagnosis. Other findings are not global diagnoses but still belong in the plan: midline, W:L ratio, wear, an aged smile.</p></div>
+        </div>
+        <p style="margin-top:12px">Several diagnoses at once is normal, and it's the point: a gummy smile often has more than one cause, and each cause needs its own treatment. <b>No global diagnosis</b> means the gingival levels are explained by normal anatomy. <b>Incomplete</b> means too few questions were answered to say.</p>
+      </div>
+
+      <div class="walk">
+        <h3>Worked example: a 27-year-old woman who dislikes her gummy smile</h3>
+        <ul>
+          <li><b>Q1:</b> lower third 70 mm against a middle third of 61 mm → <b>vertical maxillary excess</b>.</li>
+          <li><b>Q2:</b> lip 19 mm, below the 20–22 mm norm → <b>short upper lip</b>. Calculated mobility of 8.5 mm → <b>hypermobile lip</b>, flagged because it wasn't measured directly.</li>
+          <li><b>Q4–5:</b> centrals 9 mm with no palpable CEJ → <b>altered passive eruption</b>.</li>
+        </ul>
+        <p><b>How to read it:</b> the 5 mm of gingival display has four contributors. Crown lengthening corrects only the altered passive eruption. The skeletal excess needs a Le Fort I impaction, or Botox if she declines surgery. Measure lip mobility directly before deciding on Botox for the lip.</p>
+        <button type="button" class="btn small" id="btn-try-example">Open this example in the Exam tab</button>
+      </div>
+
+      <div>
+        <h2>Limits</h2>
+        <ul class="caveats">
+          <li>A teaching aid. Clinical judgment, photographs, mounted casts and radiographs still govern the plan.</li>
+          <li>The book gives the questions, diagnoses and normal values but no single cut-off algorithm. The rules here put the book into practice and are listed on the Reference tab. The ±5% tolerance on the 1:1 face ratio belongs to this tool, not the book.</li>
+          <li>Calculated lip mobility runs high when crowns are short or little tooth shows at rest. Measure it directly when it decides treatment.</li>
+          <li>Display norms come from young adults, and incisal display falls with age.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -678,7 +763,7 @@ $$("[data-copy]").forEach(b => b.addEventListener("click", () => copyNote(b)));
 /* ---------- tabs, form events ---------- */
 function showTab(name){
   $$("nav.tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === name)));
-  ["exam","ref"].forEach(t => { $("#sec-" + t).hidden = t !== name; });
+  ["exam","how","ref"].forEach(t => { $("#sec-" + t).hidden = t !== name; });
 }
 $$("nav.tabs button").forEach(b => b.addEventListener("click", () => showTab(b.dataset.tab)));
 function refresh(){ renderPanel(); renderNote(); $("#form-msg").textContent = ""; }
@@ -691,6 +776,8 @@ $("#btn-example").addEventListener("click", () => {
   ex.notes = "Worked example: long lower third, excess display at rest and in smile, short lip, short centrals with no palpable CEJ.";
   writeForm(ex); refresh(); $("#form-msg").textContent = "Worked example loaded.";
 });
+
+$("#btn-try-example").addEventListener("click", () => { $("#btn-example").click(); showTab("exam"); window.scrollTo({top:0}); });
 
 /* ---------- boot ---------- */
 showTab("exam");
