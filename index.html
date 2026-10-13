@@ -170,15 +170,15 @@ svg text{font-family:var(--font-mono);font-size:11px;fill:var(--muted)}
       <div class="ruler" aria-hidden="true"></div>
     </div>
     <nav class="tabs" role="tablist" aria-label="Sections">
-      <button role="tab" id="tab-exam" aria-selected="true" data-tab="exam">Exam</button>
-      <button role="tab" id="tab-how" aria-selected="false" data-tab="how">How it works</button>
-      <button role="tab" id="tab-ref" aria-selected="false" data-tab="ref">Reference</button>
+      <button role="tab" id="tab-how" aria-selected="true" data-tab="how">How it works</button>
+      <button role="tab" id="tab-exam" aria-selected="false" data-tab="exam">Exam</button>
+      <button role="tab" id="tab-ref" aria-selected="false" data-tab="ref">References</button>
     </nav>
   </header>
   <div class="notice" role="note"><b>Nothing is saved.</b><span>What you type stays in this page only; it isn't stored or sent anywhere, and refreshing clears it. Copy the note into the chart before you leave. Don't type names or chart numbers.</span></div>
 
   <!-- EXAM -->
-  <section class="tab" id="sec-exam" role="tabpanel" aria-labelledby="tab-exam">
+  <section class="tab" id="sec-exam" role="tabpanel" aria-labelledby="tab-exam" hidden>
     <div class="grid-exam">
       <form id="exam" autocomplete="off" novalidate>
         <fieldset>
@@ -287,7 +287,7 @@ svg text{font-family:var(--font-mono);font-size:11px;fill:var(--muted)}
   </section>
 
   <!-- HOW IT WORKS -->
-  <section class="tab" id="sec-how" role="tabpanel" aria-labelledby="tab-how" hidden>
+  <section class="tab" id="sec-how" role="tabpanel" aria-labelledby="tab-how">
     <div class="guide">
       <div>
         <h2>What Global Diagnosis is</h2>
@@ -343,7 +343,7 @@ svg text{font-family:var(--font-mono);font-size:11px;fill:var(--muted)}
         <h2>Limits</h2>
         <ul class="caveats">
           <li>A teaching aid. Clinical judgment, photographs, mounted casts and radiographs still govern the plan.</li>
-          <li>The book gives the questions, diagnoses and normal values but no single cut-off algorithm. The rules here put the book into practice and are listed on the Reference tab. The ±5% tolerance on the 1:1 face ratio belongs to this tool, not the book.</li>
+          <li>The book gives the questions, diagnoses and normal values but no single cut-off algorithm. The rules here put the book into practice and are listed on the References tab. The ±5% tolerance on the 1:1 face ratio belongs to this tool, not the book.</li>
           <li>Calculated lip mobility runs high when crowns are short or little tooth shows at rest. Measure it directly when it decides treatment.</li>
           <li>Display norms come from young adults, and incisal display falls with age.</li>
         </ul>
@@ -780,7 +780,7 @@ $("#btn-example").addEventListener("click", () => {
 $("#btn-try-example").addEventListener("click", () => { $("#btn-example").click(); showTab("exam"); window.scrollTo({top:0}); });
 
 /* ---------- boot ---------- */
-showTab("exam");
+showTab("how");
 renderPanel(); renderNote();
 })();
 </script>
