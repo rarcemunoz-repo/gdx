@@ -307,7 +307,7 @@ svg text{font-family:var(--font-mono);font-size:11px;fill:var(--muted)}
         <p>The Exam tab follows the GAD form from the face inward. Fill it in at the chair in this order. Any field can stay blank; the read-out on the right only uses what you enter.</p>
         <ol class="steps">
           <li><p><b>Set up.</b> Seat the patient upright in natural head position, ideally standing for the face and midline views. Have a digital caliper or millimeter ruler, a periodontal probe and an explorer.</p></li>
-          <li><p><b>Patient.</b> Enter sex and age. The lip and display norms depend on both, and lip norms shift 1 mm per decade after 40.</p></li>
+          <li><p><b>Patient.</b> Enter sex and age. The lip and display norms depend on both. The lip length norm rises 1 mm for each full decade after 40 (+1 mm from age 50); the Exam tab shows the adjusted range.</p></li>
           <li><p><b>Q1 Face.</b> With lips and teeth slightly apart, measure the middle third (glabella to subnasale) and lower third (subnasale to menton). Add the Angle class, and from the profile, how far each lip sits behind the nose–chin E-line.</p></li>
           <li><p><b>Q2 Lip.</b> In repose, measure lip length at the midline and how much central incisor shows. If the lip covers the edge, record a negative number. Then ask the patient to <i>laugh</i>; "smile" usually gets a clenched grimace. Record gingival display above the margins, and measure mobility directly if you can.</p></li>
           <li><p><b>Q3 Gingival line.</b> Look at the line through the canine and central gingival margins against the horizon: parallel, concave or canted. To judge the incisal plane, stretch the upper lip level with your fingers and use it as the horizon.</p></li>
@@ -320,12 +320,12 @@ svg text{font-family:var(--font-mono);font-size:11px;fill:var(--muted)}
       <div>
         <h2>Reading the result</h2>
         <div class="legend-grid">
-          <div><h3>Five CORE questions</h3><p>Each question shows <span class="chip ok">Normal</span> <span class="chip out">Outside norm</span> or <span class="chip na">Not recorded</span>. Diagnoses appear once three or more are answered.</p></div>
+          <div><h3>Five CORE questions</h3><p>Each question shows <span class="chip ok">Normal</span> <span class="chip out">Outside norm</span> or <span class="chip na">Not recorded</span>. A diagnosis appears as soon as a measurement triggers it, even with other questions still blank.</p></div>
           <div><h3>Global diagnoses</h3><p>One card per cause. The small label gives the family, the line under the title shows the measurement that triggered it, and the chips list the <b>primary</b> and <b>secondary</b> treatments from the book.</p></div>
           <div><h3>Tool numbers</h3><p><b>1</b> graft · <b>2</b> crown lengthening · <b>3</b> intrusion · <b>4</b> extrusion · <b>5</b> surgery · <b>6</b> plastics. <b>R</b> restorative, <b>O</b> orthodontics, <b>E</b> education, exercises or appliance.</p></div>
           <div><h3>Sequencing and other findings</h3><p>Sequencing appears when orthodontics or restorations are planned, or when there is more than one diagnosis. Other findings are not global diagnoses but still belong in the plan: midline, W:L ratio, wear, an aged smile.</p></div>
         </div>
-        <p style="margin-top:12px">Several diagnoses at once is normal, and it's the point: a gummy smile often has more than one cause, and each cause needs its own treatment. <b>No global diagnosis</b> means the gingival levels are explained by normal anatomy. <b>Incomplete</b> means too few questions were answered to say.</p>
+        <p style="margin-top:12px">Several diagnoses at once is normal, and it's the point: a gummy smile often has more than one cause, and each cause needs its own treatment. <b>No global diagnosis</b> means the gingival levels are explained by normal anatomy. <b>Incomplete</b> means fewer than three questions are answered and nothing has triggered a diagnosis yet.</p>
       </div>
 
       <div class="walk">
@@ -373,7 +373,7 @@ svg text{font-family:var(--font-mono);font-size:11px;fill:var(--muted)}
         <li><b>VME</b>: lower third longer than the middle third (ch 3 defines it this way). If the smile isn't gummy, the book treats it as no esthetic problem.</li>
         <li><b>VMD</b>: lower third shorter than the middle third.</li>
         <li><b>Class II / III</b>: Angle class, or an E-line screen when the class isn't recorded: lower lip more than 2 mm behind suggests Class II; in front suggests Class III.</li>
-        <li><b>Short / long lip</b>: outside F 20–22 or M 22–24 mm, shifted 1 mm per decade after 40. <b>Hyper- / hypomobile</b>: mobility above 8 or below 6 mm.</li>
+        <li><b>Short / long lip</b>: outside F 20–22 or M 22–24 mm, raised 1 mm for each full decade after 40 (+1 mm at 50–59, +2 mm at 60–69). <b>Hyper- / hypomobile</b>: mobility above 8 or below 6 mm.</li>
         <li><b>DAE</b>: concave gingival line (with or without wear) or a canted line (aberrant growth or attrition).</li>
         <li><b>APE</b>: a short tooth whose CEJ can't be felt in the sulcus.</li>
         <li><b>Short central (&lt;10 mm)</b>: incisal attrition when pathologic wear is recorded; microdontia when the CEJ is palpable and there is no wear.</li>
@@ -396,7 +396,7 @@ svg text{font-family:var(--font-mono);font-size:11px;fill:var(--muted)}
 <script>
 (function(){
 "use strict";
-const RULES_VERSION = "2026-10-13b";
+const RULES_VERSION = "2026-10-27a";
 const TEETH = ["5","6","7","8","9","10","11","12"];
 const TFIELDS = [["len","Crown length","mm"],["wid","Width","mm"],["cej","CEJ palpable",""],["rec","Recession","mm"]];
 const NORMS = {
@@ -485,10 +485,11 @@ function mobility(r){
 }
 function ratioOf(r){ return has(r.midThird) && has(r.lowerThird) && r.midThird > 0 ? r.lowerThird / r.midThird : null; }
 function rng(key, sex){ const n = NORMS[key]; return n.all || (sex && n[sex]) || null; }
+function lipShift(age){ return has(age) && age > 40 ? Math.floor((age - 40) / 10) : 0; }
 function lipRange(sex, age){
   const base = sex ? NORMS.lipLength[sex] : null;
   if (!base) return null;
-  const add = has(age) && age > 40 ? Math.floor((age - 40) / 10) : 0;
+  const add = lipShift(age);
   return [base[0] + add, base[1] + add];
 }
 function cmp(v, range){ if (!has(v) || !range) return "na"; return v < range[0] ? "low" : v > range[1] ? "high" : "ok"; }
@@ -528,13 +529,14 @@ function evaluate(r){
   q.push(q1);
 
   // Q2 length and mobility of the upper lip (ch 3)
-  const lipR = lipRange(sex, r.age), mob = mobility(r);
+  const lipR = lipRange(sex, r.age), mob = mobility(r), lipAdj = lipShift(r.age);
   let q2 = {n:"2", t:"Upper lip", st:"na", txt: sex ? "Enter lip length and mobility" : "Select sex to apply lip norms"};
   const parts = []; let out = false;
   if (has(r.lipLength) && lipR) {
     const c = cmp(r.lipLength, lipR); parts.push(`length ${fmt(r.lipLength)} mm (norm ${lipR[0]}–${lipR[1]})`);
-    if (c === "low") { out = true; add("SHORT_LIP", `Lip ${fmt(r.lipLength)} mm vs ${lipR[0]}–${lipR[1]} mm (${sex}${has(r.age) && r.age > 40 ? ", age-adjusted" : ""})`); }
-    if (c === "high") { out = true; add("LONG_LIP", `Lip ${fmt(r.lipLength)} mm vs ${lipR[0]}–${lipR[1]} mm (${sex}${has(r.age) && r.age > 40 ? ", age-adjusted" : ""})`); }
+    const lipBasis = `Lip ${fmt(r.lipLength)} mm vs ${lipR[0]}–${lipR[1]} mm (${sex}${lipAdj ? `, +${lipAdj} mm for age` : ""})`;
+    if (c === "low") { out = true; add("SHORT_LIP", lipBasis); }
+    if (c === "high") { out = true; add("LONG_LIP", lipBasis); }
   }
   if (has(mob.v)) {
     parts.push(`mobility ${fmt(mob.v)} mm (${mob.how})`);
@@ -608,7 +610,7 @@ function evaluate(r){
   if (r.lowerLipRel === "reverse") flags.push("Reverse smile line: distinguish a true reverse incisal curve from flat edges under a lip that drops at the midline.");
   if (gExcess && !dx.some(d => ["VME","HYPER_LIP","SHORT_LIP","DAE_NOWEAR","DAE_WEAR","DAE_CANT","APE"].includes(d.code)))
     flags.push(`The gummy smile has no cause identified yet. Complete or re-check Q1–Q5.`);
-  if (has(r.age) && r.age > 40) flags.push("Over 40: lip norms are shifted 1 mm per decade. Repose display norms are for young adults and fall with age.");
+  if (has(r.age) && r.age > 40) flags.push(`Over 40: ${lipAdj ? `lip length norm raised ${lipAdj} mm` : "no lip length shift until age 50"} (1 mm per full decade after 40). Repose display norms are for young adults and fall with age.`);
 
   // sequencing (ch 11)
   const has_ = c => dx.some(d => d.code === c);
@@ -640,7 +642,7 @@ function renderPanel(){
   const r = readForm(), ev = evaluate(r);
   const qs = ev.q.map(x => `<li><span class="qn">Q${x.n}</span><span><b>${esc(x.t)}</b><br><span class="cite">${esc(x.txt)}</span></span><span class="chip ${CHIP[x.st][0]}">${CHIP[x.st][1]}</span></li>`).join("");
   const dxs = ev.dx.length ? ev.dx.map(d => `<div class="dxcard"><span class="fam">${esc(DX[d.code].fam)}</span><h3>${esc(DX[d.code].label)}</h3><p>${esc(d.basis)}</p>${toolChips(d.code)}</div>`).join("")
-    : `<p class="empty">${ev.answered < 3 ? "Answer the five questions to see the global diagnosis." : "No global diagnosis: the gingival levels are explained by normal anatomy."}</p>`;
+    : `<p class="empty">${ev.answered < 3 ? "Incomplete: answer at least three of the five questions." : "No global diagnosis: the gingival levels are explained by normal anatomy."}</p>`;
   const fl = ev.flags.length ? `<ul class="flags">${ev.flags.map(f => `<li>${esc(f)}</li>`).join("")}</ul>` : `<p class="empty">None.</p>`;
   $("#panel-body").innerHTML = `
     <div><p class="ptitle">Five CORE questions · ${ev.answered}/5 answered</p><ul class="qlist">${qs}</ul></div>
@@ -648,6 +650,8 @@ function renderPanel(){
     ${ev.seq.length ? `<div><p class="ptitle">Sequencing (ch 11)</p><ul class="flags">${ev.seq.map(s => `<li>${esc(s)}</li>`).join("")}</ul></div>` : ""}
     <div><p class="ptitle">Other findings</p>${fl}</div>
     <p class="cite">Tool numbers: 1 grafting · 2 crown lengthening · 3 intrusion · 4 extrusion · 5 surgery · 6 plastics. R restorative · O orthodontics · E education, exercises or appliance.</p>`;
+  const lr = lipRange(r.sex, r.age), sh = lipShift(r.age);
+  $("#norm-lip").textContent = lr ? `${r.sex} ${lr[0]}–${lr[1]}${sh ? ` (+${sh} for age)` : ""}` : "F 20–22 · M 22–24";
   const ratio = ratioOf(r);
   $("#calc-ratio").innerHTML = has(ratio) ? `Lower ÷ middle = <b>${ratio.toFixed(2)}</b>` : "";
   const m = mobility(r);

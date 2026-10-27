@@ -113,3 +113,7 @@ This repository contains no text from the book; use your own copy.
 
 The rules the tool applies are listed on its References tab and implemented in `evaluate()` in
 `index.html` (see `RULES_VERSION`). Where they differ from anything above, the code is authoritative.
+
+- **Lip length after 40** (rules 2026-10-27a): the book's "1 mm per decade after 40" is applied per full
+  decade, so ages 41-49 use the base norm, 50-59 add 1 mm and 60-69 add 2 mm. This reading is the tool's,
+  not the book's.
