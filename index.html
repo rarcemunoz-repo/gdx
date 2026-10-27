@@ -78,6 +78,7 @@ textarea{min-height:64px;resize:vertical}
 .btn.small{padding:7px 10px;font-size:12.5px}
 .btn.danger{color:var(--bad);border-color:var(--bad)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
+.actions .case-pick{width:auto;max-width:100%;padding:10px 9px;font-size:14px}
 /* read-out panel */
 .panel{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);background:var(--surface);border:1px solid var(--ink);border-radius:var(--r);overflow:hidden}
 @media (max-width:980px){.panel{position:static}}
@@ -269,7 +270,7 @@ svg text{font-family:var(--font-mono);font-size:11px;fill:var(--muted)}
         <div class="actions">
           <button type="button" class="btn primary" data-copy>Copy note</button>
           <button type="button" class="btn" id="btn-new">Clear form</button>
-          <button type="button" class="btn" id="btn-example">Load worked example</button>
+          <select id="case-pick" class="case-pick" aria-label="Load a practice case"><option value="">Load a practice case…</option></select>
           <span id="form-msg" class="cite" role="status" aria-live="polite"></span>
         </div>
       </form>
@@ -337,6 +338,7 @@ svg text{font-family:var(--font-mono);font-size:11px;fill:var(--muted)}
         </ul>
         <p><b>How to read it:</b> the 5 mm of gingival display has four contributors. Crown lengthening corrects only the altered passive eruption. The skeletal excess needs a Le Fort I impaction, or Botox if she declines surgery. Measure lip mobility directly before deciding on Botox for the lip.</p>
         <button type="button" class="btn small" id="btn-try-example">Open this example in the Exam tab</button>
+        <p style="margin-top:10px">This is case EX-10 of 12. The other fictional cases are in the <b>Load a practice case</b> menu at the bottom of the Exam tab. Load one, work out the diagnoses yourself, then check the panel.</p>
       </div>
 
       <div>
@@ -774,14 +776,19 @@ function refresh(){ renderPanel(); renderNote(); $("#form-msg").textContent = ""
 $("#exam").addEventListener("input", refresh);
 $("#exam").addEventListener("change", refresh);
 $("#exam").addEventListener("submit", e => e.preventDefault());
-$("#btn-new").addEventListener("click", () => { writeForm({teeth:{}}); refresh(); $("#f-sex").focus(); });
-$("#btn-example").addEventListener("click", () => {
-  const ex = JSON.parse(JSON.stringify(EXAMPLES[9]));
-  ex.notes = "Worked example: long lower third, excess display at rest and in smile, short lip, short centrals with no palpable CEJ.";
-  writeForm(ex); refresh(); $("#form-msg").textContent = "Worked example loaded.";
-});
+const casePick = $("#case-pick");
+casePick.innerHTML += EXAMPLES.map((c,i) => `<option value="${i}">${esc(c.caseCode)} · ${esc(c.sex)} ${esc(c.age)} · ${esc(c.complaint)}</option>`).join("");
+function loadCase(i){
+  const ex = JSON.parse(JSON.stringify(EXAMPLES[i]));
+  ex.notes = i === 9 ? "Worked example: long lower third, excess display at rest and in smile, short lip, short centrals with no palpable CEJ."
+    : `Practice case ${ex.caseCode} (fictional data).`;
+  writeForm(ex); refresh(); casePick.value = String(i);
+  $("#form-msg").textContent = `${ex.caseCode} loaded. Name the diagnoses before you read the panel.`;
+}
+casePick.addEventListener("change", e => { e.stopPropagation(); if (casePick.value !== "") loadCase(Number(casePick.value)); });
+$("#btn-new").addEventListener("click", () => { writeForm({teeth:{}}); casePick.value = ""; refresh(); $("#f-sex").focus(); });
 
-$("#btn-try-example").addEventListener("click", () => { $("#btn-example").click(); showTab("exam"); window.scrollTo({top:0}); });
+$("#btn-try-example").addEventListener("click", () => { loadCase(9); showTab("exam"); window.scrollTo({top:0}); });
 
 /* ---------- boot ---------- */
 showTab("how");
